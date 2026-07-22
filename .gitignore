@@ -1,0 +1,13 @@
+# User data — never commit (contains notes, images, password hashes, cookie secret)
+data/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

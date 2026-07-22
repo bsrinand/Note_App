@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Inkwell</title>
+<link rel="stylesheet" href="/style.css" />
+<script>
+  document.documentElement.dataset.theme = localStorage.getItem('inkwell-theme') || 'light';
+</script>
+</head>
+<body>
+<div id="app">
+  <!-- Top bar -->
+  <header id="topbar">
+    <div class="brand">🖋️ <span>Inkwell</span></div>
+    <div class="top-right">
+      <button id="themeToggle" class="top-btn" title="Toggle dark mode">🌙</button>
+      <button id="settingsBtn" class="top-btn" title="Settings">⚙️</button>
+      <button id="userChip" class="user-chip" title="Account settings"><span id="userInitial">?</span><span id="userName">…</span></button>
+    </div>
+  </header>
+
+  <div id="workspace">
+    <!-- Projects -->
+    <aside id="sidebar">
+      <div class="col-head">
+        <span class="col-title">Folders</span>
+        <button id="newProjectBtn" class="icon-btn" title="New project folder">＋</button>
+      </div>
+      <div id="projectList" class="list"></div>
+    </aside>
+
+    <!-- Notes -->
+    <section id="notesCol">
+      <div class="col-head">
+        <span id="projectName" class="col-title">Select a folder</span>
+        <button id="newNoteBtn" class="icon-btn" title="New note" disabled>＋</button>
+      </div>
+      <div id="noteList" class="list"></div>
+    </section>
+
+    <!-- Editor -->
+    <main id="editor">
+      <div id="emptyState" class="empty">
+        <div>
+          <h2>Welcome to Inkwell 👋</h2>
+          <p>Create a folder on the left, then add a note to start writing.</p>
+        </div>
+      </div>
+
+      <div id="editorInner" class="hidden">
+        <div class="toolbar">
+          <input id="noteTitle" class="title-input" placeholder="Untitled" />
+          <div class="tools">
+            <div class="seg" id="pageTypeSeg">
+              <button data-pt="blank">Blank</button>
+              <button data-pt="ruled">Ruled</button>
+              <button data-pt="grid">Grid</button>
+            </div>
+            <span class="divider"></span>
+            <select id="fontFamily" class="tsel" title="Font">
+              <option value="">Default</option>
+              <option value="Georgia, 'Times New Roman', serif">Serif</option>
+              <option value="Consolas, 'Courier New', monospace">Monospace</option>
+              <option value="Arial, Helvetica, sans-serif">Arial</option>
+              <option value="'Segoe UI', system-ui, sans-serif">Segoe UI</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+              <option value="'Comic Sans MS', cursive">Comic Sans</option>
+            </select>
+            <select id="fontSize" class="tsel" title="Font size">
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16" selected>16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="24">24</option>
+              <option value="28">28</option>
+              <option value="32">32</option>
+              <option value="40">40</option>
+            </select>
+            <div class="seg" id="styleSeg">
+              <button id="boldBtn" data-cmd="bold" title="Bold (Ctrl+B)" style="font-weight:800">B</button>
+              <button id="italicBtn" data-cmd="italic" title="Italic (Ctrl+I)" style="font-style:italic">I</button>
+              <button id="underlineBtn" data-cmd="underline" title="Underline (Ctrl+U)" style="text-decoration:underline">U</button>
+              <button id="strikeBtn" data-cmd="strikeThrough" title="Strikethrough" style="text-decoration:line-through">S</button>
+            </div>
+            <input id="textColor" type="color" value="#1f2430" title="Text color" />
+            <span class="divider"></span>
+            <button id="penBtn" class="tool" title="Pen — write with a stylus or mouse">✒️ Pen</button>
+            <button id="eraserBtn" class="tool" title="Eraser">🩹 Erase</button>
+            <input id="penColor" type="color" value="#2b5cff" title="Ink color" />
+            <select id="penSize" class="tsel" title="Pen size">
+              <option value="1.5">Fine</option>
+              <option value="2.5" selected>Medium</option>
+              <option value="4">Bold</option>
+            </select>
+            <button id="undoBtn" class="tool" title="Undo last stroke">↶ Undo</button>
+            <span class="divider"></span>
+            <button id="imageBtn" class="tool" title="Insert image">🖼️ Image</button>
+            <span class="divider"></span>
+            <span id="saveStatus" class="save-status">Saved</span>
+          </div>
+        </div>
+
+        <div id="pageScroll">
+          <div id="page">
+            <div id="textLayer" class="text-layer" contenteditable="true" spellcheck="true"></div>
+            <canvas id="inkLayer"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div id="settingsOverlay" class="overlay hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Settings</h3>
+      <button id="closeSettings" class="top-btn" title="Close">✕</button>
+    </div>
+
+    <div class="modal-section">
+      <label class="fld"><span>Display name</span>
+        <input id="setName" type="text" placeholder="Your name" />
+      </label>
+      <div class="fld"><span>Email</span><div id="setEmail" class="readonly-val"></div></div>
+      <button id="saveName" class="btn-primary sm">Save name</button>
+      <span id="nameSaved" class="mini-note"></span>
+    </div>
+
+    <div class="modal-section">
+      <div class="section-label">Appearance</div>
+      <label class="switch-row">
+        <span>Dark mode</span>
+        <input id="darkSwitch" type="checkbox" />
+      </label>
+    </div>
+
+    <details class="modal-section">
+      <summary class="section-label">Change password</summary>
+      <label class="fld"><span>Current password</span><input id="curPw" type="password" autocomplete="current-password" /></label>
+      <label class="fld"><span>New password</span><input id="newPw" type="password" autocomplete="new-password" placeholder="At least 6 characters" /></label>
+      <button id="savePw" class="btn-primary sm">Update password</button>
+      <span id="pwNote" class="mini-note"></span>
+    </details>
+
+    <div class="modal-foot">
+      <button id="logoutBtn" class="btn-danger">Log out</button>
+    </div>
+  </div>
+</div>
+
+<input id="fileInput" type="file" accept="image/*" hidden />
+<script src="/app.js"></script>
+</body>
+</html>

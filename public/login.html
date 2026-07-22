@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inkwell — Sign in</title>
+<link rel="stylesheet" href="/style.css" />
+<script>
+  // apply saved theme before paint to avoid flash
+  document.documentElement.dataset.theme = localStorage.getItem('inkwell-theme') || 'light';
+</script>
+</head>
+<body class="auth-body">
+  <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+
+  <div class="auth-card">
+    <div class="auth-brand">🖋️ <span>Inkwell</span></div>
+    <p class="auth-tagline">Your notes, your ink, your data.</p>
+
+    <div class="seg auth-seg" id="modeSeg">
+      <button data-mode="login" class="on">Sign in</button>
+      <button data-mode="signup">Create account</button>
+    </div>
+
+    <form id="authForm" autocomplete="on">
+      <label class="fld signup-only" style="display:none">
+        <span>Name</span>
+        <input id="name" type="text" placeholder="Your name" autocomplete="name" />
+      </label>
+      <label class="fld">
+        <span>Email</span>
+        <input id="email" type="email" placeholder="you@example.com" required autocomplete="email" />
+      </label>
+      <label class="fld">
+        <span>Password</span>
+        <input id="password" type="password" placeholder="At least 6 characters" required autocomplete="current-password" minlength="6" />
+      </label>
+      <div id="authError" class="auth-error"></div>
+      <button id="submitBtn" type="submit" class="btn-primary">Sign in</button>
+    </form>
+  </div>
+
+<script>
+let mode = 'login';
+const $ = s => document.querySelector(s);
+const modeSeg = $('#modeSeg'), form = $('#authForm'), err = $('#authError');
+const submitBtn = $('#submitBtn'), signupOnly = document.querySelectorAll('.signup-only');
+
+modeSeg.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  mode = b.dataset.mode;
+  [...modeSeg.children].forEach(x => x.classList.toggle('on', x === b));
+  signupOnly.forEach(el => el.style.display = mode === 'signup' ? '' : 'none');
+  submitBtn.textContent = mode === 'signup' ? 'Create account' : 'Sign in';
+  $('#password').autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+  err.textContent = '';
+});
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  err.textContent = '';
+  submitBtn.disabled = true;
+  const payload = { email: $('#email').value, password: $('#password').value };
+  if (mode === 'signup') payload.name = $('#name').value;
+  try{
+    const r = await fetch('/api/auth/' + (mode === 'signup' ? 'signup' : 'login'), {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const data = await r.json();
+    if (!r.ok){ err.textContent = data.error || 'Something went wrong.'; submitBtn.disabled = false; return; }
+    window.location = '/';
+  }catch{ err.textContent = 'Cannot reach the server.'; submitBtn.disabled = false; }
+});
+
+// theme toggle
+const themeBtn = $('#themeToggle');
+function syncThemeIcon(){ themeBtn.textContent = document.documentElement.dataset.theme === 'dark' ? '☀️' : '🌙'; }
+syncThemeIcon();
+themeBtn.onclick = () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('inkwell-theme', next);
+  syncThemeIcon();
+};
+
+// if already signed in, skip to app
+fetch('/api/auth/me').then(r => { if (r.ok) window.location = '/'; });
+</script>
+</body>
+</html>
