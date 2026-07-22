@@ -59,37 +59,6 @@
               <button data-pt="grid">Grid</button>
             </div>
             <span class="divider"></span>
-            <select id="fontFamily" class="tsel" title="Font">
-              <option value="">Default</option>
-              <option value="Georgia, 'Times New Roman', serif">Serif</option>
-              <option value="Consolas, 'Courier New', monospace">Monospace</option>
-              <option value="Arial, Helvetica, sans-serif">Arial</option>
-              <option value="'Segoe UI', system-ui, sans-serif">Segoe UI</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="'Times New Roman', serif">Times New Roman</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-              <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
-              <option value="'Comic Sans MS', cursive">Comic Sans</option>
-            </select>
-            <select id="fontSize" class="tsel" title="Font size">
-              <option value="12">12</option>
-              <option value="14">14</option>
-              <option value="16" selected>16</option>
-              <option value="18">18</option>
-              <option value="20">20</option>
-              <option value="24">24</option>
-              <option value="28">28</option>
-              <option value="32">32</option>
-              <option value="40">40</option>
-            </select>
-            <div class="seg" id="styleSeg">
-              <button id="boldBtn" data-cmd="bold" title="Bold (Ctrl+B)" style="font-weight:800">B</button>
-              <button id="italicBtn" data-cmd="italic" title="Italic (Ctrl+I)" style="font-style:italic">I</button>
-              <button id="underlineBtn" data-cmd="underline" title="Underline (Ctrl+U)" style="text-decoration:underline">U</button>
-              <button id="strikeBtn" data-cmd="strikeThrough" title="Strikethrough" style="text-decoration:line-through">S</button>
-            </div>
-            <input id="textColor" type="color" value="#1f2430" title="Text color" />
-            <span class="divider"></span>
             <button id="penBtn" class="tool" title="Pen — write with a stylus or mouse">✒️ Pen</button>
             <button id="eraserBtn" class="tool" title="Eraser">🩹 Erase</button>
             <input id="penColor" type="color" value="#2b5cff" title="Ink color" />
@@ -101,9 +70,83 @@
             <button id="undoBtn" class="tool" title="Undo last stroke">↶ Undo</button>
             <span class="divider"></span>
             <button id="imageBtn" class="tool" title="Insert image">🖼️ Image</button>
-            <span class="divider"></span>
             <span id="saveStatus" class="save-status">Saved</span>
           </div>
+        </div>
+
+        <!-- Word-style text formatting ribbon -->
+        <div class="ribbon" id="ribbon">
+          <button class="rb" id="tUndo" title="Undo (Ctrl+Z)">↶</button>
+          <button class="rb" id="tRedo" title="Redo (Ctrl+Y)">↷</button>
+          <span class="divider"></span>
+
+          <select id="blockStyle" class="tsel" title="Paragraph style">
+            <option value="P">Normal</option>
+            <option value="H1">Heading 1</option>
+            <option value="H2">Heading 2</option>
+            <option value="H3">Heading 3</option>
+            <option value="BLOCKQUOTE">Quote</option>
+            <option value="PRE">Code block</option>
+          </select>
+          <select id="fontFamily" class="tsel" title="Font">
+            <option value="">Default</option>
+            <option value="Georgia, 'Times New Roman', serif">Serif</option>
+            <option value="Consolas, 'Courier New', monospace">Monospace</option>
+            <option value="Arial, Helvetica, sans-serif">Arial</option>
+            <option value="'Segoe UI', system-ui, sans-serif">Segoe UI</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+            <option value="'Comic Sans MS', cursive">Comic Sans</option>
+          </select>
+          <select id="fontSize" class="tsel" title="Font size">
+            <option value="12">12</option><option value="14">14</option>
+            <option value="16" selected>16</option><option value="18">18</option>
+            <option value="20">20</option><option value="24">24</option>
+            <option value="28">28</option><option value="32">32</option>
+            <option value="40">40</option><option value="48">48</option>
+          </select>
+          <span class="divider"></span>
+
+          <div class="seg" id="styleSeg">
+            <button id="boldBtn" data-cmd="bold" title="Bold (Ctrl+B)" style="font-weight:800">B</button>
+            <button id="italicBtn" data-cmd="italic" title="Italic (Ctrl+I)" style="font-style:italic">I</button>
+            <button id="underlineBtn" data-cmd="underline" title="Underline (Ctrl+U)" style="text-decoration:underline">U</button>
+            <button id="strikeBtn" data-cmd="strikeThrough" title="Strikethrough" style="text-decoration:line-through">S</button>
+          </div>
+          <button class="rb" id="supBtn" title="Superscript">x²</button>
+          <button class="rb" id="subBtn" title="Subscript">x₂</button>
+          <input id="textColor" class="cswatch" type="color" value="#1f2430" title="Text color" />
+          <input id="hiliteColor" class="cswatch" type="color" value="#ffe600" title="Highlight color" />
+          <span class="divider"></span>
+
+          <div class="seg" id="alignSeg">
+            <button data-align="justifyLeft" title="Align left"><svg viewBox="0 0 16 16"><g><line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="10" y2="8"/><line x1="2" y1="12" x2="13" y2="12"/></g></svg></button>
+            <button data-align="justifyCenter" title="Center"><svg viewBox="0 0 16 16"><g><line x1="2" y1="4" x2="14" y2="4"/><line x1="4" y1="8" x2="12" y2="8"/><line x1="3" y1="12" x2="13" y2="12"/></g></svg></button>
+            <button data-align="justifyRight" title="Align right"><svg viewBox="0 0 16 16"><g><line x1="2" y1="4" x2="14" y2="4"/><line x1="6" y1="8" x2="14" y2="8"/><line x1="3" y1="12" x2="14" y2="12"/></g></svg></button>
+            <button data-align="justifyFull" title="Justify"><svg viewBox="0 0 16 16"><g><line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="2" y1="12" x2="14" y2="12"/></g></svg></button>
+          </div>
+          <span class="divider"></span>
+
+          <button class="rb" id="ulBtn" title="Bulleted list">•&nbsp;≣</button>
+          <button class="rb" id="olBtn" title="Numbered list">1.&nbsp;≣</button>
+          <button class="rb" id="outdentBtn" title="Decrease indent">⇤</button>
+          <button class="rb" id="indentBtn" title="Increase indent">⇥</button>
+          <select id="lineSpacing" class="tsel" title="Line spacing">
+            <option value="">↕ Spacing</option>
+            <option value="1">1.0</option>
+            <option value="1.15">1.15</option>
+            <option value="1.5">1.5</option>
+            <option value="2">2.0</option>
+            <option value="2.5">2.5</option>
+            <option value="3">3.0</option>
+          </select>
+          <span class="divider"></span>
+
+          <button class="rb" id="linkBtn" title="Insert link">🔗</button>
+          <button class="rb" id="hrBtn" title="Horizontal line">―</button>
+          <button class="rb" id="clearBtn" title="Clear formatting">✕</button>
         </div>
 
         <div id="pageScroll">

@@ -99,12 +99,32 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 #styleSeg button{width:34px;font-size:14px;color:var(--ink)}
 #styleSeg button.on{background:var(--accent);color:#fff}
 
+/* ===== Formatting ribbon ===== */
+.ribbon{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:8px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.rb{border:1px solid var(--line);background:var(--panel);color:var(--ink);min-width:32px;height:32px;padding:0 8px;border-radius:8px;font-size:13px;display:inline-grid;place-items:center;transition:.1s;white-space:nowrap}
+.rb:hover{background:var(--bg)}
+.rb.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cswatch{width:32px;height:32px;padding:0;border:1px solid var(--line);border-radius:8px;background:none;cursor:pointer}
+#alignSeg button{width:34px;display:grid;place-items:center;padding:0}
+#alignSeg svg{width:15px;height:15px}
+#alignSeg svg line{stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+#alignSeg button.on{background:var(--accent);color:#fff}
+
 /* ===== Page ===== */
 #pageScroll{flex:1;overflow:auto;padding:28px;min-height:0}
 #page{position:relative;width:820px;max-width:100%;min-height:1000px;margin:0 auto;background:var(--page);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
 .text-layer{position:relative;z-index:1;min-height:1000px;padding:56px 64px;font-size:16px;line-height:32px;color:var(--ink);outline:none}
 .text-layer:empty:before{content:attr(data-ph);color:var(--muted)}
 .text-layer img{max-width:100%;border-radius:8px;margin:6px 0;display:block}
+.text-layer h1{font-size:1.9em;line-height:1.25;margin:.5em 0 .3em;font-weight:700}
+.text-layer h2{font-size:1.5em;line-height:1.3;margin:.5em 0 .3em;font-weight:700}
+.text-layer h3{font-size:1.22em;line-height:1.35;margin:.5em 0 .3em;font-weight:600}
+.text-layer blockquote{border-left:3px solid var(--accent);margin:.5em 0;padding:.15em 0 .15em 14px;color:var(--muted)}
+.text-layer pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:Consolas,'Courier New',monospace;white-space:pre-wrap;margin:.5em 0}
+.text-layer ul,.text-layer ol{padding-left:1.7em;margin:.35em 0}
+.text-layer li{margin:.1em 0}
+.text-layer a{color:var(--accent)}
+.text-layer hr{border:none;border-top:1px solid var(--line);margin:1em 0}
 #inkLayer{position:absolute;inset:0;z-index:2;width:100%;height:100%;touch-action:none;pointer-events:none}
 #page.pen #inkLayer{pointer-events:auto;cursor:crosshair}
 #page.pen .text-layer{cursor:crosshair}

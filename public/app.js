@@ -128,6 +128,7 @@ async function openNote(nid){
   state.strokes = Array.isArray(n.strokes) ? n.strokes : [];
   state.pageType = n.pageType || 'ruled';
   titleInput.value = n.title || '';
+  textLayer.style.lineHeight = '';
   textLayer.innerHTML = n.html || '';
   emptyState.classList.add('hidden');
   editorInner.classList.remove('hidden');
@@ -340,9 +341,83 @@ function setFontSize(px){
 function updateStyleStates(){
   [['boldBtn','bold'],['italicBtn','italic'],['underlineBtn','underline'],['strikeBtn','strikeThrough']]
     .forEach(([id, cmd]) => { try { $('#'+id).classList.toggle('on', document.queryCommandState(cmd)); } catch {} });
+  // alignment active state
+  const alignMap = { justifyLeft:'left', justifyCenter:'center', justifyRight:'right', justifyFull:'full' };
+  document.querySelectorAll('#alignSeg button').forEach(b => {
+    try { b.classList.toggle('on', document.queryCommandState(b.dataset.align)); } catch {}
+  });
 }
 textLayer.addEventListener('keyup', updateStyleStates);
 textLayer.addEventListener('mouseup', updateStyleStates);
+
+// ---------- Word-style paragraph & list controls ----------
+// helper: a toolbar button that runs a command while keeping the text selection
+function toolBtn(id, fn){
+  const el = $('#'+id); if (!el) return;
+  el.addEventListener('mousedown', e => e.preventDefault());  // don't steal selection
+  el.addEventListener('click', fn);
+}
+
+// paragraph style (headings, quote, code, normal)
+$('#blockStyle').addEventListener('change', e => {
+  restoreRange();
+  document.execCommand('formatBlock', false, e.target.value);
+  markDirty();
+});
+
+// alignment
+const alignSeg = $('#alignSeg');
+alignSeg.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
+alignSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) exec(b.dataset.align); });
+
+// simple command buttons
+toolBtn('tUndo', () => exec('undo'));
+toolBtn('tRedo', () => exec('redo'));
+toolBtn('ulBtn', () => exec('insertUnorderedList'));
+toolBtn('olBtn', () => exec('insertOrderedList'));
+toolBtn('indentBtn', () => exec('indent'));
+toolBtn('outdentBtn', () => exec('outdent'));
+toolBtn('supBtn', () => exec('superscript'));
+toolBtn('subBtn', () => exec('subscript'));
+toolBtn('hrBtn', () => exec('insertHorizontalRule'));
+toolBtn('clearBtn', () => {
+  restoreRange();
+  document.execCommand('removeFormat');
+  document.execCommand('formatBlock', false, 'P');
+  markDirty();
+});
+toolBtn('linkBtn', () => {
+  restoreRange();
+  const url = prompt('Link URL:', 'https://');
+  if (url) document.execCommand('createLink', false, url);
+  markDirty();
+});
+
+// highlight color
+$('#hiliteColor').addEventListener('input', e => {
+  restoreRange();
+  if (!document.execCommand('hiliteColor', false, e.target.value))
+    document.execCommand('backColor', false, e.target.value);
+  markDirty();
+});
+
+// line spacing (applied to the selected paragraphs, or whole note if none selected)
+$('#lineSpacing').addEventListener('change', e => {
+  if (e.target.value) setLineSpacing(e.target.value);
+  e.target.selectedIndex = 0;
+});
+function setLineSpacing(v){
+  restoreRange();
+  const sel = window.getSelection();
+  if (sel.rangeCount){
+    const range = sel.getRangeAt(0);
+    const blocks = [...textLayer.querySelectorAll('p,div,h1,h2,h3,h4,li,blockquote,pre')]
+      .filter(el => range.intersectsNode(el));
+    if (blocks.length){ blocks.forEach(el => el.style.lineHeight = v); markDirty(); return; }
+  }
+  textLayer.style.lineHeight = v;   // fallback: whole note
+  markDirty();
+}
 
 // keep canvas sized to the (growing) page
 const ro = new ResizeObserver(() => { resizeCanvas(); redraw(); });
