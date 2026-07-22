@@ -6,15 +6,35 @@
 <title>Inkwell</title>
 <link rel="stylesheet" href="/style.css" />
 <script>
-  document.documentElement.dataset.theme = localStorage.getItem('inkwell-theme') || 'light';
+  // apply saved theme + panel/toolbar visibility before paint (no flash)
+  var d = document.documentElement;
+  d.dataset.theme = localStorage.getItem('inkwell-theme') || 'light';
+  if (localStorage.getItem('inkwell-panels') === 'off') d.classList.add('hide-panels');
+  if (localStorage.getItem('inkwell-toolbar') === 'off') d.classList.add('hide-toolbar');
 </script>
 </head>
 <body>
 <div id="app">
   <!-- Top bar -->
   <header id="topbar">
-    <div class="brand">🖋️ <span>Inkwell</span></div>
+    <div class="top-left">
+      <button id="panelsToggle" class="top-btn" title="Show / hide side panels">
+        <svg viewBox="0 0 20 20" width="17" height="17"><rect x="2.5" y="3.5" width="15" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="7.8" y1="3.5" x2="7.8" y2="16.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <div class="brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+          <rect x="1" y="1" width="30" height="30" rx="8.5" fill="var(--accent)"/>
+          <path d="M16 6 L21.5 18.5 C21.5 23.5 18.8 25.5 16 25.5 C13.2 25.5 10.5 23.5 10.5 18.5 Z" fill="#fff"/>
+          <line x1="16" y1="12.5" x2="16" y2="23.5" stroke="var(--accent)" stroke-width="1.5"/>
+          <circle cx="16" cy="11.5" r="1.7" fill="var(--accent)"/>
+        </svg>
+        <span>Inkwell</span>
+      </div>
+    </div>
     <div class="top-right">
+      <button id="toolbarToggle" class="top-btn" title="Show / hide toolbar">
+        <svg viewBox="0 0 20 20" width="17" height="17"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"><line x1="3" y1="6.5" x2="17" y2="6.5"/><circle cx="13" cy="6.5" r="1.9" fill="var(--panel)"/><line x1="3" y1="13.5" x2="17" y2="13.5"/><circle cx="7" cy="13.5" r="1.9" fill="var(--panel)"/></g></svg>
+      </button>
       <button id="themeToggle" class="top-btn" title="Toggle dark mode">🌙</button>
       <button id="settingsBtn" class="top-btn" title="Settings">⚙️</button>
       <button id="userChip" class="user-chip" title="Account settings"><span id="userInitial">?</span><span id="userName">…</span></button>

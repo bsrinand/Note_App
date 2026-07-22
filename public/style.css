@@ -33,14 +33,23 @@ button{font-family:inherit;cursor:pointer;color:inherit}
   padding:0 14px;height:52px;background:var(--panel);
   border-bottom:1px solid var(--line);flex:0 0 auto;
 }
-.brand{font-weight:700;font-size:16px;display:flex;align-items:center;gap:7px}
+.top-left{display:flex;align-items:center;gap:10px}
+.brand{font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px}
 .brand span{letter-spacing:.2px}
+.logo-mark{display:block;border-radius:8px;box-shadow:0 1px 3px rgba(20,25,40,.18)}
 .top-right{display:flex;align-items:center;gap:8px}
+.top-btn svg{display:block}
+
+/* collapsible chrome */
+.hide-panels #sidebar,.hide-panels #notesCol{display:none}
+.hide-panels #workspace{grid-template-columns:1fr}
+.hide-toolbar .toolbar,.hide-toolbar .ribbon{display:none}
 .top-btn{
   border:1px solid var(--line);background:var(--panel);border-radius:9px;
   width:34px;height:34px;font-size:15px;display:grid;place-items:center;transition:.12s;
 }
 .top-btn:hover{background:var(--bg)}
+.top-btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .user-chip{
   display:flex;align-items:center;gap:8px;border:1px solid var(--line);
   background:var(--panel);border-radius:20px;padding:4px 12px 4px 4px;font-size:13.5px;font-weight:600;

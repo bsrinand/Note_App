@@ -492,6 +492,24 @@ function setTheme(t){
 syncThemeIcon();
 themeToggle.onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 
+// panel / toolbar visibility (persisted, class on <html>)
+function applyChrome(){
+  const d = document.documentElement;
+  d.classList.toggle('hide-panels', localStorage.getItem('inkwell-panels') === 'off');
+  d.classList.toggle('hide-toolbar', localStorage.getItem('inkwell-toolbar') === 'off');
+  $('#panelsToggle').classList.toggle('on', localStorage.getItem('inkwell-panels') === 'off');
+  $('#toolbarToggle').classList.toggle('on', localStorage.getItem('inkwell-toolbar') === 'off');
+}
+function toggleChrome(key){
+  const off = localStorage.getItem(key) === 'off';
+  localStorage.setItem(key, off ? 'on' : 'off');
+  applyChrome();
+  requestAnimationFrame(() => { if (state.noteId){ resizeCanvas(); redraw(); } });
+}
+$('#panelsToggle').onclick = () => toggleChrome('inkwell-panels');
+$('#toolbarToggle').onclick = () => toggleChrome('inkwell-toolbar');
+applyChrome();
+
 const overlay = $('#settingsOverlay');
 function openSettings(){
   $('#setName').value = state.user.name;
