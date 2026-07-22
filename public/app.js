@@ -326,7 +326,12 @@ $('#textColor').addEventListener('input', e => exec('foreColor', e.target.value)
 
 function setFontSize(px){
   restoreRange();
-  document.execCommand('fontSize', false, '7');           // temp marker size
+  const sel = window.getSelection();
+  if (!sel.rangeCount || sel.isCollapsed) return;         // need selected text
+  // fontSize must emit a <font size="7"> marker, so turn styleWithCSS OFF here
+  document.execCommand('styleWithCSS', false, false);
+  document.execCommand('fontSize', false, '7');
+  document.execCommand('styleWithCSS', false, true);
   textLayer.querySelectorAll('font[size="7"]').forEach(el => {
     el.removeAttribute('size'); el.style.fontSize = px + 'px';
   });
